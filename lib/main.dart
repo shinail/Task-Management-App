@@ -2,9 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_management/viewmodels/auth_viewmodel.dart';
+import 'package:task_management/viewmodels/task_viewmodel.dart';
 import 'package:task_management/views/auth/forgot_password.dart';
 import 'package:task_management/views/auth/login.dart';
 import 'package:task_management/views/auth/signup.dart';
+import 'package:task_management/views/dashboard/profile/profile.dart';
+import 'package:task_management/views/dashboard/tasks/add_tasks.dart';
+import 'package:task_management/views/dashboard/user_dashboard.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +22,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => AuthViewModel())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
+        ChangeNotifierProvider(create: (_) => TaskViewModel()),
+      ],
       child: MaterialApp(
         title: 'Task Manager',
         debugShowCheckedModeBanner: false,
@@ -28,6 +35,9 @@ class MyApp extends StatelessWidget {
           '/login': (context) => LoginScreen(),
           '/signup': (context) => SignUpScreen(),
           '/forgot': (context) => ForgotPasswordScreen(),
+          '/home': (context) => UserDashboard(),
+          '/profile': (context) => ProfileScreen(),
+          '/addtask': (context) => AddTaskScreen(),
         },
       ),
     );

@@ -25,7 +25,7 @@ class AuthViewModel extends ChangeNotifier {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       _showSnackbar(context, "Login successful!");
-      Navigator.pop(context);
+      Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
       String error = _getErrorMessage(e);
       _showSnackbar(context, error);
@@ -62,6 +62,8 @@ class AuthViewModel extends ChangeNotifier {
         email: email,
         password: password,
       );
+      await FirebaseAuth.instance.currentUser?.updateDisplayName(name);
+      await FirebaseAuth.instance.currentUser?.reload();
 
       await _firestore.collection('users').doc(userCredential.user!.uid).set({
         'uid': userCredential.user!.uid,
