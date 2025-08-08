@@ -74,9 +74,8 @@ class AuthViewModel extends ChangeNotifier {
 
       _showSnackbar(context, "Account created successfully!");
 
-      Future.delayed(const Duration(seconds: 2), () {
-        Navigator.pop(context); // Navigate back to login screen
-      });
+      await Future.delayed(const Duration(seconds: 3));
+      Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
       String error = _getErrorMessage(e);
       _showSnackbar(context, error);
@@ -90,7 +89,7 @@ class AuthViewModel extends ChangeNotifier {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Reset email sent!')));
-      Navigator.pop(context); // Go back to login screen
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       String message = 'Enter email.';
       if (e.code == 'user-not-found') {

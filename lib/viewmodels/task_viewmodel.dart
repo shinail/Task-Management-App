@@ -23,7 +23,7 @@ class TaskViewModel extends ChangeNotifier {
     return _firestore
         .collection(_collectionPath)
         .where('isArchived', isEqualTo: true)
-        .orderBy('dueDate', descending: true)
+        .orderBy('dueDate')
         .snapshots()
         .map((snapshot) {
           return snapshot.docs
@@ -33,12 +33,15 @@ class TaskViewModel extends ChangeNotifier {
   }
 
   Future<void> addTask(TaskModel task) async {
+    final taskMap = task.toMap();
+    taskMap['isArchived'] = false;
     await _firestore.collection(_collectionPath).add(task.toMap());
   }
 
-  Future<void> archiveTask(String taskId) async {
+  Future<void> archiveTask(String taskId, DateTime dueDate) async {
     await _firestore.collection(_collectionPath).doc(taskId).update({
       'isArchived': true,
+      'dueDate': dueDate,
     });
   }
 
@@ -46,6 +49,10 @@ class TaskViewModel extends ChangeNotifier {
     await _firestore.collection(_collectionPath).doc(taskId).update({
       'isCompleted': value,
     });
+  }
+
+  Future<void> deleteTask(String taskId) async {
+    await _firestore.collection(_collectionPath).doc(taskId).delete();
   }
 
   Future<void> toggleTaskCompletion(String taskId) async {
@@ -59,9 +66,5 @@ class TaskViewModel extends ChangeNotifier {
         .collection(_collectionPath)
         .doc(taskId)
         .update(updatedTask.toMap());
-  }
-
-  Future<void> deleteTask(String taskId) async {
-    await _firestore.collection(_collectionPath).doc(taskId).delete();
   }
 }

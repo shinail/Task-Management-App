@@ -25,6 +25,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         dueDate: _selectedDate!,
         priority: _selectedPriority,
         isCompleted: false,
+        isArchived: false,
       );
 
       Provider.of<TaskViewModel>(context, listen: false).addTask(newTask);

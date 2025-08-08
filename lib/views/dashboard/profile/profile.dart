@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../tasks/history.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -26,35 +28,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: const Text("Profile"),
         backgroundColor: Colors.purple.shade200,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            _buildEditableNameCard(),
-            const SizedBox(height: 16),
-            _buildInfoCard(
-              icon: Icons.email,
-              label: "Email",
-              value: user?.email ?? "Email",
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildEditableNameCard(),
+                const SizedBox(height: 16),
+                _buildInfoCard(
+                  icon: Icons.email,
+                  label: "Email",
+                  value: user?.email ?? "Email",
+                ),
+                const SizedBox(height: 16),
+                _buildActionButton(
+                  icon: Icons.history,
+                  label: "Task History",
+                  onTap: () {
+                    Navigator.pushNamed(context, '/history');
+                  },
+                ),
+                const SizedBox(height: 16),
+                _buildActionButton(
+                  icon: Icons.lock,
+                  label: "Change Password",
+                  onTap: _showChangePasswordDialog,
+                ),
+                const SizedBox(height: 16),
+                _buildActionButton(
+                  icon: Icons.logout,
+                  label: "Log Out",
+                  onTap: () async {
+                    await FirebaseAuth.instance.signOut();
+                    if (mounted) {
+                      Navigator.of(context).pushReplacementNamed('/login');
+                    }
+                  },
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            _buildActionButton(
-              icon: Icons.lock,
-              label: "Change Password",
-              onTap: _showChangePasswordDialog,
-            ),
-            const SizedBox(height: 16),
-            _buildActionButton(
-              icon: Icons.logout,
-              label: "Log Out",
-              onTap: () async {
-                await FirebaseAuth.instance.signOut();
-                if (mounted) {
-                  Navigator.of(context).pushReplacementNamed('/login');
-                }
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );

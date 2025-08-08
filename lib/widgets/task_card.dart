@@ -25,27 +25,39 @@ class TaskCard extends StatelessWidget {
           ),
         ),
         subtitle: Text('Due: $date'),
-        trailing: Checkbox(
-          value: task.isCompleted,
-          onChanged: (val) {
-            if (task.id != null) {
-              taskVM.markCompleted(task.id!, val ?? false);
-            }
-          },
-        ),
+        trailing:
+            task.isArchived
+                ? IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                  onPressed: () async {
+                    if (task.id != null) {
+                      await taskVM.deleteTask(task.id!);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Task deleted from history'),
+                        ),
+                      );
+                    }
+                  },
+                )
+                : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Checkbox(
+                      value: task.isCompleted,
+                      onChanged: (val) {
+                        if (task.id != null) {
+                          taskVM.markCompleted(task.id!, val ?? false);
+                        }
+                      },
+                    ),
+                  ],
+                ),
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => TaskDetailScreen(task: task)),
           );
-        },
-        onLongPress: () async {
-          if (task.id != null) {
-            await taskVM.archiveTask(task.id!);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Task moved to history')),
-            );
-          }
         },
       ),
     );

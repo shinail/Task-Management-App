@@ -235,7 +235,10 @@ class HomeScreen extends StatelessWidget {
                                     ),
                                     onPressed: () {
                                       if (task.id != null) {
-                                        taskVM.deleteTask(task.id!);
+                                        taskVM.archiveTask(
+                                          task.id!,
+                                          task.dueDate!,
+                                        );
                                       }
                                     },
                                   ),
